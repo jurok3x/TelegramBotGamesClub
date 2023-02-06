@@ -19,7 +19,7 @@ public class TelegramMessageService implements MessageService {
     public void sendMessage(String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(String.format("Повідомлення від Романа: %s", message));
-        sendMessage.setChatId(-857777285L);
+        sendMessage.setChatId("332187582");
         executeCommand(sendMessage);
     }
 

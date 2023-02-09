@@ -18,8 +18,8 @@ public class TelegramMessageService implements MessageService {
     @Override
     public void sendMessage(String message) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setText(String.format("Повідомлення від Романа: %s", message));
-        sendMessage.setChatId("332187582");
+        sendMessage.setText(String.format("Повідомлення від Романа: '%s'", message));
+        sendMessage.setChatId("-1001669277319");
         executeCommand(sendMessage);
     }
 

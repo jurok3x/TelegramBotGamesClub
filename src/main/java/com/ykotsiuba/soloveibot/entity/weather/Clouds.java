@@ -1,29 +1,14 @@
 package com.ykotsiuba.soloveibot.entity.weather;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Clouds {
     
-    @Override
-    public String toString() {
-        return "Clouds [all=" + all + "]";
-    }
-
     private Integer all;
-
-    public Integer getAll() {
-        return all;
-    }
-
-    public void setAll(Integer all) {
-        this.all = all;
-    }
-
-    public Clouds(Integer all) {
-        super();
-        this.all = all;
-    }
-
-    public Clouds() {
-        
-    }
-
+    
 }

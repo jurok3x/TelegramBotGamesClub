@@ -1,6 +1,6 @@
 package com.ykotsiuba.soloveibot.service.impl;
 
-import com.ykotsiuba.soloveibot.entity.weather.WeatherResponse;
+import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 import com.ykotsiuba.soloveibot.service.APIClientService;
 
 import org.springframework.http.ResponseEntity;
@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class SpringAPIClientService implements APIClientService{
+public class OpenWeatherClientService implements APIClientService{
     
     private RestTemplate restTemplate;
 
     @Override
-    public WeatherResponse getWeatherResponse() {
+    public OpenWeatherResponse getWeatherResponse() {
         restTemplate = new RestTemplate();
-        ResponseEntity<WeatherResponse> response = restTemplate.getForEntity(prepareUrl(), WeatherResponse.class);
+        ResponseEntity<OpenWeatherResponse> response = restTemplate.getForEntity(prepareUrl(), OpenWeatherResponse.class);
         return response.getBody();
     }
 

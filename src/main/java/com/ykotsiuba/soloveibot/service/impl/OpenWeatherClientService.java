@@ -10,6 +10,10 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class OpenWeatherClientService implements APIClientService{
     
+    private static final String LANGUAGE = "ua";
+    private static final String CITY = "Ivano-Frankivsk,ua";
+    private static final String UNITS = "metric";
+    private static final String WEATHER_TOKEN = "051a029e530b502978441902c3723f47";
     private RestTemplate restTemplate;
 
     @Override
@@ -21,7 +25,7 @@ public class OpenWeatherClientService implements APIClientService{
 
     private String prepareUrl() {
         return String.format("https://api.openweathermap.org/data/2.5/weather?q=%s&lang=%s&units=%s&APPID=%s",
-                "Ivano-Frankivsk,ua", "ua", "metric", "051a029e530b502978441902c3723f47");
+                CITY, LANGUAGE, UNITS, WEATHER_TOKEN);
     }
 
 }

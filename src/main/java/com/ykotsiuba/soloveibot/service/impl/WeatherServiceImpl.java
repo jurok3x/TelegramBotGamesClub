@@ -1,109 +1,67 @@
 package com.ykotsiuba.soloveibot.service.impl;
 
 import com.ykotsiuba.soloveibot.entity.Emoji;
-import com.ykotsiuba.soloveibot.entity.weather.Clouds;
-import com.ykotsiuba.soloveibot.entity.weather.LocalSystem;
-import com.ykotsiuba.soloveibot.entity.weather.Weather;
-import com.ykotsiuba.soloveibot.entity.weather.WeatherMain;
-import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
-import com.ykotsiuba.soloveibot.entity.weather.Wind;
+import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
 import com.ykotsiuba.soloveibot.service.WeatherService;
 
 import org.springframework.stereotype.Service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 @Service
 public class WeatherServiceImpl implements WeatherService {
     
+    private static final int DEGREE_SIGN = 0x00B0;
     private static final String CITY = "Івано-Франківськ";
     private StringBuilder report;
 
     @Override
-    public String sendReport(OpenWeatherResponse response) {
+    public String sendReport(WeatherResponseDto weatherDto) {
         report = new StringBuilder();
-        getCityReport(response.getDt());
-        getTemparatureReport(response.getMain());
-        getWeatherConditionReport(response.getWeather()[0]);
-        getHumidityReport(response.getMain());
-        getCloudsReport(response.getClouds());
-        getWindReport(response.getWind());
-        getSunReport(response.getSys());
+        getCityReport(weatherDto.getDate());
+        getTemparatureReport(weatherDto.getTemperature());
+        getWeatherConditionReport(weatherDto.getCondition(), weatherDto.getIcon());
+        getHumidityReport(weatherDto.getHumidity());
+        getCloudsReport(weatherDto.getClouds());
+        getWindReport(weatherDto.getWindSpeed());
+        getPressureReport(weatherDto.getPressure());
+        getSunReport(weatherDto.getSunrise(), weatherDto.getSunset());
         return report.toString();
     }
     
-    private void getCityReport(Long dayTime) {
-        Date date = new Date(dayTime);  
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
-        report.append(String.format("Погода в місті %s на %s:%n", CITY, dateFormat.format(date)));
+    private void getCityReport(String date) {
+        report.append(String.format("Погода в місті %s на %s:%n", CITY, date));
     }
     
-    private void getTemparatureReport(WeatherMain main) {
-        String degreeSign = new String(Character.toChars(0x00B0));
+    private void getTemparatureReport(Double temperature) {
         report.append(String.format("Температура повітря%s : %.2f %sc%n", Emoji.THERMOMETER.getEmogi(),
-                main.getTemp(), degreeSign));
+                temperature, String.valueOf(Character.toChars(DEGREE_SIGN))));
     }
     
-    private void getWeatherConditionReport(Weather weather) {
-        report.append(String.format("Погодні умови: %s%s%n", weather.getDescription(),
-                getWeatherEmoji(weather.getIcon())));
+    private void getWeatherConditionReport(String condition, String icon) {
+        report.append(String.format("Погодні умови: %s%s%n", condition, icon));
     }
     
-    private void getHumidityReport(WeatherMain main) {
+    private void getHumidityReport(Integer humidity) {
         report.append(String.format("Відносна вологість%s : %d%%%n", Emoji.HUMIDITY.getEmogi(),
-                main.getHumidity()));
+                humidity));
     }
     
-    private void getCloudsReport(Clouds clouds) {
+    private void getCloudsReport(Integer clouds) {
         report.append(String.format("Хмарність %s: %d%%%n", Emoji.BROKEN_CLOUDS.getEmogi(),
-                clouds.getAll()));
+                clouds));
     }
     
-    private void getWindReport(Wind wind) {
+    private void getWindReport(Double windSpeed) {
         report.append(String.format("Швидкість вітру %s: %.2f м/с%n", Emoji.WIND.getEmogi(),
-                wind.getSpeed()));
+                windSpeed));
     }
     
-    private void getSunReport(LocalSystem system) {
-        Date sunrise = new Date(system.getSunrise()); 
-        Date sunset = new Date(system.getSunset());
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss"); 
+    private void getPressureReport(Double pressure) {
+        report.append(String.format("Атмосферний тиск: %.2f мм.рт.ст%n", pressure));
+    }
+    
+    private void getSunReport(String sunrise, String sunset) {
         report.append(String.format("Схід сонця%s: %s%nЗахід сонця%s: %s", Emoji.SUNRISE.getEmogi(),
-                dateFormat.format(sunrise), Emoji.SUNSET.getEmogi(), dateFormat.format(sunset)));
-    }
-    
-    private String getWeatherEmoji(String icon) {
-        if(icon.contains("01")) {
-            return Emoji.CLEAR_SKY.getEmogi();
-        }
-        if (icon.contains("02")) {
-            return Emoji.FEW_CLOUDS.getEmogi();
-        }
-        if (icon.contains("03")) {
-            return Emoji.SCATTERED_CLOUDS.getEmogi();
-        }
-        if (icon.contains("04")) {
-            return Emoji.BROKEN_CLOUDS.getEmogi();
-        }
-        if (icon.contains("09")) {
-            return Emoji.SHOWER_RAIN.getEmogi();
-        }
-        if (icon.contains("10")) {
-            return Emoji.RAIN.getEmogi();
-        }
-        if (icon.contains("11")) {
-            return Emoji.THUNDERSTORM.getEmogi();
-        }
-        if (icon.contains("13")) {
-            return Emoji.SNOW.getEmogi();
-        }
-        if (icon.contains("50")) {
-            return Emoji.MIST.getEmogi();
-        } else {
-            return Emoji.DEFAULT.getEmogi();
-        }
+                sunrise, Emoji.SUNSET.getEmogi(), sunset));
     }
 
 }

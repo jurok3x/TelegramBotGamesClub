@@ -1,9 +1,9 @@
 package com.ykotsiuba.soloveibot.service;
 
-import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
+import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
 
 public interface WeatherService {
     
-    String sendReport(OpenWeatherResponse response);
+    String sendReport(WeatherResponseDto weatherDto);
 
 }

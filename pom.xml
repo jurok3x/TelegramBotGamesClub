@@ -78,6 +78,15 @@
 				</filters>
 			</build>
 		</profile>
+		<profile>
+			<id>dev</id>
+			<build>
+				<finalName>soloveibot-dev</finalName>
+				<filters>
+					<filter>src/main/resources/application-dev.properties</filter>
+				</filters>
+			</build>
+		</profile>
 	</profiles>
 
 </project>

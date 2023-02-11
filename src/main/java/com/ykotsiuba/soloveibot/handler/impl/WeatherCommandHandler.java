@@ -1,8 +1,7 @@
 package com.ykotsiuba.soloveibot.handler.impl;
 
-import com.ykotsiuba.soloveibot.client.impl.OpenWeatherSpringClientService;
+import com.ykotsiuba.soloveibot.client.impl.SpringOpenWeatherClient;
 import com.ykotsiuba.soloveibot.entity.Command;
-import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 import com.ykotsiuba.soloveibot.handler.CommandHandler;
 import com.ykotsiuba.soloveibot.mapper.OpenWeatherResponseMapper;
@@ -22,19 +21,21 @@ public class WeatherCommandHandler implements CommandHandler {
     
     private final SoloveiTelegramBot bot;
     private final WeatherService weatherService;
-    private final OpenWeatherSpringClientService weatherAPI;
 
     @Override
     public void handleCommand(Message message) {
-        OpenWeatherResponse weatherResponse = weatherAPI.getWeatherResponse();
         SendMessage messageRequest = SendMessage.builder()
                 .chatId(message.getChatId())
-                .text(weatherService.sendReport(OpenWeatherResponseMapper.toResponseDto(weatherResponse)))
+                .text(weatherService.sendReport())
                 .build();
+        sendMessage(messageRequest);
+    }
+
+    private void sendMessage(SendMessage messageRequest) {
         try {
             bot.execute(messageRequest);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            System.out.println(String.format("Error sending message. Reason: %s", e.getMessage()));
         }
     }
 

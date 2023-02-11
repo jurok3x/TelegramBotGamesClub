@@ -1,6 +1,6 @@
 package com.ykotsiuba.soloveibot.client.impl;
 
-import com.ykotsiuba.soloveibot.client.OpenWeatherClientService;
+import com.ykotsiuba.soloveibot.client.OpenWeatherClient;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 @PropertySource("classpath:/openweather/weather_api.properties")
 @RequiredArgsConstructor
-public class OpenWeatherSpringClientService implements OpenWeatherClientService{
+public class SpringOpenWeatherClient implements OpenWeatherClient {
     
     @Value("weather.link")
     private String link;

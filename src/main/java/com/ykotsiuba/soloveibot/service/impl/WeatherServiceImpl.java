@@ -1,21 +1,27 @@
 package com.ykotsiuba.soloveibot.service.impl;
 
+import com.ykotsiuba.soloveibot.client.OpenWeatherClient;
 import com.ykotsiuba.soloveibot.entity.Emoji;
 import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
+import com.ykotsiuba.soloveibot.mapper.OpenWeatherResponseMapper;
 import com.ykotsiuba.soloveibot.service.WeatherService;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
     
     private static final int DEGREE_SIGN = 0x00B0;
     private static final String CITY = "Івано-Франківськ";
+    private final OpenWeatherClient whetherClient;
     private StringBuilder report;
 
     @Override
-    public String sendReport(WeatherResponseDto weatherDto) {
-        report = new StringBuilder();
+    public String sendReport() {
+        init();
+        WeatherResponseDto weatherDto = OpenWeatherResponseMapper.toResponseDto(whetherClient.getWeatherResponse());
         getCityReport(weatherDto.getDate());
         getTemparatureReport(weatherDto.getTemperature());
         getWeatherConditionReport(weatherDto.getCondition(), weatherDto.getIcon());
@@ -25,6 +31,10 @@ public class WeatherServiceImpl implements WeatherService {
         getPressureReport(weatherDto.getPressure());
         getSunReport(weatherDto.getSunrise(), weatherDto.getSunset());
         return report.toString();
+    }
+
+    private void init() {
+        report = new StringBuilder();
     }
     
     private void getCityReport(String date) {

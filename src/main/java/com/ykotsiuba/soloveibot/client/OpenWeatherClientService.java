@@ -1,8 +1,8 @@
-package com.ykotsiuba.soloveibot.service;
+package com.ykotsiuba.soloveibot.client;
 
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 
-public interface APIClientService {
+public interface OpenWeatherClientService {
     
     OpenWeatherResponse getWeatherResponse();
 

@@ -2,6 +2,7 @@ package com.ykotsiuba.soloveibot.mapper;
 
 import com.ykotsiuba.soloveibot.entity.Emoji;
 import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
+import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherForecastResponse;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class OpenWeatherResponseMapper {
@@ -26,6 +28,10 @@ public class OpenWeatherResponseMapper {
                 .temperature(response.getMain().getTemp())
                 .windSpeed(response.getWind().getSpeed())
                 .build();
+    }
+
+    public static List<WeatherResponseDto> toCollectionDto(OpenWeatherForecastResponse response) {
+        return response.getList().stream().map(OpenWeatherResponseMapper::toResponseDto).toList();
     }
     
     private static Double convertPressure(Integer pressure) {

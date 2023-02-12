@@ -21,7 +21,7 @@ public class WeatherServiceImpl implements WeatherService {
     @Override
     public String sendReport() {
         init();
-        WeatherResponseDto weatherDto = OpenWeatherResponseMapper.toResponseDto(whetherClient.getWeatherResponse());
+        WeatherResponseDto weatherDto = OpenWeatherResponseMapper.toResponseDto(whetherClient.getCurrentWeather());
         getCityReport(weatherDto.getDate());
         getTemparatureReport(weatherDto.getTemperature());
         getWeatherConditionReport(weatherDto.getCondition(), weatherDto.getIcon());

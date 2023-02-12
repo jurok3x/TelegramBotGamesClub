@@ -17,9 +17,7 @@ public class OpenWeatherResponse {
     private LocalSystem sys;
     private Integer timezone;
     private Clouds clouds;
-    private Integer id;
     private String name;
-    private Integer cod;
     private Integer visibility;
     private String base;
     

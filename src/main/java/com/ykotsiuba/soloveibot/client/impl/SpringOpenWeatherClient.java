@@ -1,6 +1,7 @@
 package com.ykotsiuba.soloveibot.client.impl;
 
 import com.ykotsiuba.soloveibot.client.OpenWeatherClient;
+import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherForecastResponse;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,14 @@ public class SpringOpenWeatherClient implements OpenWeatherClient {
     private final RestTemplate restTemplate;
 
     @Override
-    public OpenWeatherResponse getWeatherResponse() {
+    public OpenWeatherResponse getCurrentWeather() {
         ResponseEntity<OpenWeatherResponse> response = restTemplate.getForEntity(prepareUrl(), OpenWeatherResponse.class);
+        return response.getBody();
+    }
+
+    @Override
+    public OpenWeatherForecastResponse getWeatherForecast() {
+        ResponseEntity<OpenWeatherForecastResponse> response = restTemplate.getForEntity(prepareUrl(), OpenWeatherForecastResponse.class);
         return response.getBody();
     }
 

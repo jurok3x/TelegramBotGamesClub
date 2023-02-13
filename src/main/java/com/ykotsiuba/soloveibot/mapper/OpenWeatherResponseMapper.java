@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class OpenWeatherResponseMapper {
@@ -20,9 +21,9 @@ public class OpenWeatherResponseMapper {
                 .clouds(response.getClouds().getAll())
                 .pressure(convertPressure(response.getMain().getPressure()))
                 .date(toDateString(response.getDt()))
-                .condition(response.getWeather()[0].getDescription())
+                .condition(response.getWeather().get(0).getDescription())
                 .humidity(response.getMain().getHumidity())
-                .icon(getWeatherEmoji(response.getWeather()[0].getIcon()))
+                .icon(getWeatherEmoji(response.getWeather().get(0).getIcon()))
                 .sunrise(toTimeString(response.getSys().getSunrise()))
                 .sunset(toTimeString(response.getSys().getSunset()))
                 .temperature(response.getMain().getTemp())
@@ -31,7 +32,7 @@ public class OpenWeatherResponseMapper {
     }
 
     public static List<WeatherResponseDto> toCollectionDto(OpenWeatherForecastResponse response) {
-        return response.getList().stream().map(OpenWeatherResponseMapper::toResponseDto).toList();
+        return response.getList().stream().map(OpenWeatherResponseMapper::toResponseDto).collect(Collectors.toList());
     }
     
     private static Double convertPressure(Integer pressure) {

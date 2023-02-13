@@ -1,10 +1,7 @@
 package com.ykotsiuba.soloveibot.handler.impl;
 
-import com.ykotsiuba.soloveibot.client.impl.SpringOpenWeatherClient;
 import com.ykotsiuba.soloveibot.entity.Command;
-import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 import com.ykotsiuba.soloveibot.handler.CommandHandler;
-import com.ykotsiuba.soloveibot.mapper.OpenWeatherResponseMapper;
 import com.ykotsiuba.soloveibot.service.WeatherService;
 import com.ykotsiuba.soloveibot.telegrambots.SoloveiTelegramBot;
 

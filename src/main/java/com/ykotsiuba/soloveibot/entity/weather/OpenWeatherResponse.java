@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class OpenWeatherResponse {
 
     private Coordinates coord;
-    private Weather[] weather;
+    private List<Weather> weather;
     private WeatherMain main;
     private Wind wind;
     private Long dt;

@@ -56,7 +56,7 @@ public class SpringOpenWeatherClient implements OpenWeatherClient {
             builder.addParameter("lang", language);
             builder.addParameter("units", units);
             builder.addParameter("APPID", weatherToken);
-            builder.addParameter("cnt", "3");
+            builder.addParameter("cnt", "3"); //TODO: fix this
             uri = builder.build();
         } catch (URISyntaxException e) {
             System.out.println(String.format("Error building URI. Reason: %s", e.getMessage()));

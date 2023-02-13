@@ -1,4 +1,4 @@
-package com.ykotsiuba.soloveibot.handler;
+package com.ykotsiuba.soloveibot.command;
 
 import com.ykotsiuba.soloveibot.entity.Command;
 

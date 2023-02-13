@@ -1,7 +1,7 @@
-package com.ykotsiuba.soloveibot.handler.impl;
+package com.ykotsiuba.soloveibot.command.impl;
 
+import com.ykotsiuba.soloveibot.command.CommandHandler;
 import com.ykotsiuba.soloveibot.entity.Command;
-import com.ykotsiuba.soloveibot.handler.CommandHandler;
 import com.ykotsiuba.soloveibot.service.WeatherService;
 import com.ykotsiuba.soloveibot.telegrambots.SoloveiTelegramBot;
 

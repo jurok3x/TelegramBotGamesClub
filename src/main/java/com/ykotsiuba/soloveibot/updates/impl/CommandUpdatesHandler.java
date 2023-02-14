@@ -1,6 +1,7 @@
 package com.ykotsiuba.soloveibot.updates.impl;
 
 import com.ykotsiuba.soloveibot.command.CommandFactory;
+import com.ykotsiuba.soloveibot.entity.Command;
 import com.ykotsiuba.soloveibot.parser.CommandParser;
 import com.ykotsiuba.soloveibot.updates.UpdateHandlerStage;
 import com.ykotsiuba.soloveibot.updates.UpdatesHandler;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -26,6 +29,11 @@ public class CommandUpdatesHandler implements UpdatesHandler {
           }
           Message message = update.getMessage();
           if (!message.hasText()) {
+            return false;
+          }
+          String text = message.getText();
+          Optional<Command> command = parser.parse(text);
+          if (!command.isPresent()) {
             return false;
           }
         return false;

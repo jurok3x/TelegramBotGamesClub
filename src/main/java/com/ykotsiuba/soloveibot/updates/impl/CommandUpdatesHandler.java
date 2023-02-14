@@ -1,6 +1,7 @@
 package com.ykotsiuba.soloveibot.updates.impl;
 
 import com.ykotsiuba.soloveibot.command.CommandFactory;
+import com.ykotsiuba.soloveibot.parser.CommandParser;
 import com.ykotsiuba.soloveibot.updates.UpdateHandlerStage;
 import com.ykotsiuba.soloveibot.updates.UpdatesHandler;
 

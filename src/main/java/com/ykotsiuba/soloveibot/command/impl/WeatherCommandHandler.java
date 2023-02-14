@@ -1,7 +1,7 @@
 package com.ykotsiuba.soloveibot.command.impl;
 
 import com.ykotsiuba.soloveibot.command.CommandHandler;
-import com.ykotsiuba.soloveibot.entity.Command;
+import com.ykotsiuba.soloveibot.entity.CommandType;
 import com.ykotsiuba.soloveibot.service.WeatherService;
 import com.ykotsiuba.soloveibot.telegrambots.SoloveiTelegramBot;
 
@@ -37,8 +37,8 @@ public class WeatherCommandHandler implements CommandHandler {
     }
 
     @Override
-    public Command getCommand() {
-        return Command.CURRENT_WEATHER;
+    public CommandType getCommand() {
+        return CommandType.CURRENT_WEATHER;
     }
 
 }

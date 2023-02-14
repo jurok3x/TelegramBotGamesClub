@@ -1,6 +1,6 @@
 package com.ykotsiuba.soloveibot.command;
 
-import com.ykotsiuba.soloveibot.entity.Command;
+import com.ykotsiuba.soloveibot.entity.CommandType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +18,7 @@ import jakarta.annotation.PostConstruct;
 public class CommandFactory {
     
     private final List<CommandHandler> handlers;
-    private Map<Command, CommandHandler> handlersMap;
+    private Map<CommandType, CommandHandler> handlersMap;
     
     @PostConstruct
     private void init() {
@@ -27,9 +27,9 @@ public class CommandFactory {
                 handler -> handlersMap.put(handler.getCommand(), handler));
     }
     
-    public CommandHandler getHandler(Command command) {
+    public CommandHandler getHandler(CommandType command) {
         return Optional.ofNullable(handlersMap.get(command))
-                .orElseThrow(() -> new IllegalStateException("Not supported command: " + command.getCommand()));
+                .orElseThrow(() -> new IllegalStateException("Not supported command: " + command.getName()));
     }
 
 }

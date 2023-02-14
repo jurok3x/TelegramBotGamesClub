@@ -87,6 +87,15 @@
 				</filters>
 			</build>
 		</profile>
+		<profile>
+			<id>test</id>
+			<build>
+				<finalName>soloveibot-test</finalName>
+				<filters>
+					<filter>src/main/resources/application-test.properties</filter>
+				</filters>
+			</build>
+		</profile>
 	</profiles>
 
 </project>

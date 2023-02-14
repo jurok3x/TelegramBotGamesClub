@@ -20,7 +20,7 @@ public class WeatherCommandHandler implements CommandHandler {
     private final WeatherService weatherService;
 
     @Override
-    public void handleCommand(Message message) {
+    public void handleCommand(Message message, String text) {
         SendMessage messageRequest = SendMessage.builder()
                 .chatId(message.getChatId())
                 .text(weatherService.sendReport())

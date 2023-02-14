@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public interface UpdatesHandler {
     
-    boolean handleUpdate(Update update) throws TelegramApiException;
+    boolean handleUpdate(Update update);
     
     UpdateHandlerStage getStage();
 

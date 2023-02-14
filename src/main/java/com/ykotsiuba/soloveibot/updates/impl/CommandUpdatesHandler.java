@@ -1,6 +1,7 @@
 package com.ykotsiuba.soloveibot.updates.impl;
 
 import com.ykotsiuba.soloveibot.command.CommandFactory;
+import com.ykotsiuba.soloveibot.command.CommandHandler;
 import com.ykotsiuba.soloveibot.entity.Command;
 import com.ykotsiuba.soloveibot.parser.CommandParser;
 import com.ykotsiuba.soloveibot.updates.UpdateHandlerStage;
@@ -11,7 +12,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Optional;
 
@@ -23,7 +23,7 @@ public class CommandUpdatesHandler implements UpdatesHandler {
     private CommandParser parser;
 
     @Override
-    public boolean handleUpdate(Update update) throws TelegramApiException {
+    public boolean handleUpdate(Update update) {
         if (!update.hasMessage()) {
             return false;
           }
@@ -36,7 +36,9 @@ public class CommandUpdatesHandler implements UpdatesHandler {
           if (!command.isPresent()) {
             return false;
           }
-        return false;
+        CommandHandler handler = factory.getHandler(command.get().getType());
+          handler.handleCommand(message, command.get().getCommand());
+        return true;
     }
 
     @Override

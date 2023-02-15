@@ -1,14 +1,13 @@
 package com.ykotsiuba.soloveibot.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 
-@AllArgsConstructor
-@Getter
-public enum Command {
+@Data
+@Builder
+public class Command {
     
-    CURRENT_WEATHER("weather"), WEATHER_FORECAST("weather_forecast");
-    
-    private final String command;
+    private CommandType type;
+    private String commandText;
 
 }

@@ -12,14 +12,15 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Service
 @AllArgsConstructor
 public class TelegramMessageService implements MessageService {
-    
+
+    public static final String CHAT_ID = "-1001669277319";
     private SoloveiTelegramBot bot;
 
     @Override
     public void sendMessage(String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(String.format("Повідомлення від Романа: '%s'", message));
-        sendMessage.setChatId("-1001669277319");
+        sendMessage.setChatId(CHAT_ID);
         executeCommand(sendMessage);
     }
 

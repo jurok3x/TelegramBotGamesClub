@@ -21,13 +21,13 @@ import java.net.URISyntaxException;
 @RequiredArgsConstructor
 public class SpringOpenWeatherClient implements OpenWeatherClient {
 
-    @Value("weather.language")
+    @Value("${weather.language}")
     private String language;
-    @Value("weather.city")
+    @Value("${weather.city}")
     private String city;
-    @Value("weather.units")
+    @Value("${weather.units}")
     private String units;
-    @Value("openweather.token")
+    @Value("${openweather.token}")
     private String weatherToken;
     private final RestTemplate restTemplate;
 

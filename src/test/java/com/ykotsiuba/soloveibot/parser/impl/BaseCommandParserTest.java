@@ -31,7 +31,7 @@ class BaseCommandParserTest {
     
     private Command prepareCommand() {
         return Command.builder()
-                .command("")
+                .commandText("")
                 .type(CommandType.CURRENT_WEATHER)
                 .build();
     }

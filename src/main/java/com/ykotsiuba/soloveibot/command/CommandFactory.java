@@ -2,34 +2,28 @@ package com.ykotsiuba.soloveibot.command;
 
 import com.ykotsiuba.soloveibot.entity.CommandType;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import jakarta.annotation.PostConstruct;
-
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Component
 public class CommandFactory {
     
-    private final List<CommandHandler> handlers;
-    private Map<CommandType, CommandHandler> handlersMap;
+    private static final String HANDLER_NAME_SUFFIX = "CommandHandler";
+    private BeanFactory beanFactory;
     
-    @PostConstruct
-    private void init() {
-        handlersMap = new HashMap<>();
-        handlers.stream().forEach(
-                handler -> handlersMap.put(handler.getCommand(), handler));
+    public CommandHandler getCommandHandler(CommandType type) {
+        return beanFactory.getBean(extractCommand(type) + HANDLER_NAME_SUFFIX, CommandHandler.class);
     }
     
-    public CommandHandler getHandler(CommandType command) {
-        return Optional.ofNullable(handlersMap.get(command))
-                .orElseThrow(() -> new IllegalStateException("Not supported command: " + command.getName()));
+    private String extractCommand(CommandType type) {
+        String command = null;
+        if(type.getName().contains("weather")) {
+            command = "Weather";
+        }
+        return command;
     }
 
 }

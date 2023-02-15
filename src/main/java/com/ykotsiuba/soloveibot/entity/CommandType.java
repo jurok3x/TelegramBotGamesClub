@@ -3,9 +3,6 @@ package com.ykotsiuba.soloveibot.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Optional;
-import java.util.stream.Stream;
-
 @AllArgsConstructor
 @Getter
 public enum CommandType {
@@ -16,13 +13,5 @@ public enum CommandType {
     
     private final String name;
     private final String description;
-    
-    public static Optional<CommandType> parseCommand(String command) {
-        if (command.isBlank()) {
-          return Optional.empty();
-        }
-        String formatName = command.trim().toLowerCase();
-        return Stream.of(values()).filter(c -> c.name.equalsIgnoreCase(formatName)).findFirst();
-      }
 
 }

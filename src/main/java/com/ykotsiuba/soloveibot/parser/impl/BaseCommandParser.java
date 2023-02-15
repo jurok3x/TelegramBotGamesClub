@@ -78,7 +78,7 @@ public class BaseCommandParser implements CommandParser{
       
       private Command prepareCommand(CommandType type, String command) {
           return Command.builder()
-                  .command(command)
+                  .commandText(command)
                   .type(type)
                   .build();
       }

@@ -8,6 +8,6 @@ import lombok.Data;
 public class Command {
     
     private CommandType type;
-    private String command;
+    private String commandText;
 
 }

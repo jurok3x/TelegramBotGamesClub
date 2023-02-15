@@ -18,27 +18,39 @@ import java.util.Optional;
 @Component
 @AllArgsConstructor
 public class CommandUpdatesHandler implements UpdatesHandler {
-    
+
     private CommandFactory factory;
     private CommandParser parser;
 
     @Override
     public boolean handleUpdate(Update update) {
-        if (!update.hasMessage()) {
-            return false;
-          }
-          Message message = update.getMessage();
-          if (!message.hasText()) {
-            return false;
-          }
-          String text = message.getText();
-          Optional<Command> command = parser.parse(text);
-          if (!command.isPresent()) {
-            return false;
-          }
-        CommandHandler handler = factory.getHandler(command.get().getType());
-          handler.handleCommand(message, command.get().getCommand());
-        return true;
+        if (isCommand(update)) {
+            Optional<Command> command = extractCommand(update);
+            if (!command.isPresent()) {
+                return false;
+            }
+            executeCommand(command.get(), update.getMessage());
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isCommand(Update update) {
+        if (update.hasMessage()) {
+            return update.getMessage().hasText();
+        }
+        return false;
+    }
+    
+    private void executeCommand(Command command, Message message) {
+        CommandHandler handler = factory.getCommandHandler(command.getType());
+        handler.handleCommand(message, command.getCommandText());
+    }
+    
+    private Optional<Command> extractCommand(Update update) {
+        Message message = update.getMessage();
+        String text = message.getText();
+        return parser.parse(text);
     }
 
     @Override

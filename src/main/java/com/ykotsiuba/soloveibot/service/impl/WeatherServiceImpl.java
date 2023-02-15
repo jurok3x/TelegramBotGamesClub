@@ -66,7 +66,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
     
     private void getPressureReport(Double pressure) {
-        report.append(String.format("Атмосферний тиск: %.2f мм.рт.ст%n", pressure));
+        report.append(String.format("Атмосферний тиск: %.2f мм.рт.ст.%n", pressure));
     }
     
     private void getSunReport(String sunrise, String sunset) {

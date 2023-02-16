@@ -11,10 +11,6 @@ import java.net.URISyntaxException;
 
 class SpringOpenWeatherClientTest {
 
-    @BeforeEach
-    void setUp() throws Exception {
-    }
-
     @Test
     void test() {
         assertEquals("https://api.openweathermap.org/data/2.5/weather?q=Ivano-Frankivsk%2Cua&lang=ua&units=metric&APPID=token",

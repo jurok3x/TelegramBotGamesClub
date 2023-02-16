@@ -1,4 +1,4 @@
-package com.ykotsiuba.soloveibot.utils;
+package com.ykotsiuba.soloveibot.util;
 
 import com.ykotsiuba.soloveibot.entity.Emoji;
 import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;

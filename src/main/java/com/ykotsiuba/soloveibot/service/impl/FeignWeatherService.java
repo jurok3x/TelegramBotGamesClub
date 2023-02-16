@@ -6,7 +6,8 @@ import com.ykotsiuba.soloveibot.entity.request.WeatherParameters;
 import com.ykotsiuba.soloveibot.entity.request.WeatherUnits;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 import com.ykotsiuba.soloveibot.service.WeatherService;
-import com.ykotsiuba.soloveibot.utils.WeatherUtils;
+import com.ykotsiuba.soloveibot.util.WeatherUtils;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

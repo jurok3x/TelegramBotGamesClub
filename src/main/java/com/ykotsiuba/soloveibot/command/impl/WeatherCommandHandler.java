@@ -2,7 +2,7 @@ package com.ykotsiuba.soloveibot.command.impl;
 
 import com.ykotsiuba.soloveibot.command.CommandHandler;
 import com.ykotsiuba.soloveibot.entity.CommandType;
-import com.ykotsiuba.soloveibot.service.WeatherService;
+import com.ykotsiuba.soloveibot.service.impl.FeignWeatherService;
 import com.ykotsiuba.soloveibot.telegrambots.SoloveiTelegramBot;
 
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 public class WeatherCommandHandler implements CommandHandler {
     
     private final SoloveiTelegramBot bot;
-    private final WeatherService weatherService;
+    private final FeignWeatherService weatherService;
 
     @Override
     public void handleCommand(Message message, String text) {
         SendMessage messageRequest = SendMessage.builder()
                 .chatId(message.getChatId())
-                .text(weatherService.sendReport())
+                .text(weatherService.getCurrentWeatherReport())
                 .build();
         sendMessage(messageRequest);
     }

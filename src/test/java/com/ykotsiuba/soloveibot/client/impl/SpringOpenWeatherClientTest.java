@@ -3,17 +3,12 @@ package com.ykotsiuba.soloveibot.client.impl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
 class SpringOpenWeatherClientTest {
-
-    @BeforeEach
-    void setUp() throws Exception {
-    }
 
     @Test
     void test() {

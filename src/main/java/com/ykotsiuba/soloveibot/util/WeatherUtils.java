@@ -6,6 +6,7 @@ import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -65,12 +66,12 @@ public class WeatherUtils {
     }
 
     private static void getWindReport(Double windSpeed) {
-        report.append(String.format("Швидкість вітру %s: %.2f м/с%n", Emoji.WIND.getEmogi(),
+        report.append(String.format(Locale.ROOT,"Швидкість вітру %s: %.2f м/с%n", Emoji.WIND.getEmogi(),
                 windSpeed));
     }
 
     private static void getPressureReport(Double pressure) {
-        report.append(String.format("Атмосферний тиск: %.2f мм.рт.ст.%n", pressure));
+        report.append(String.format(Locale.ROOT,"Атмосферний тиск: %.2f мм.рт.ст.%n", pressure));
     }
 
     private static void getSunReport(String sunrise, String sunset) {
@@ -82,14 +83,25 @@ public class WeatherUtils {
         report = new StringBuilder();
         report.append(String.format("Прогноз погоди в місті %s на 12 годин:", CITY));
         for(WeatherResponseDto weatherDto:weatherDtoList) {
-            report.append(String.format("%n%s: %s %s, %s %s", toDateString(weatherDto.getDate(), "dd/MM HH:mm"),
+            report.append(String.format("%n%s:%n%s %s, %s %s", toDateString(weatherDto.getDate(), "dd/MM HH:mm"),
                     Emoji.THERMOMETER.getEmogi(), getTemparature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
         }
         return report.toString();
     }
 
-    public static String prepare5DWeatherReport(OpenWeatherResponse response) {
+    public static String prepare5DWeatherReport(List<WeatherResponseDto> weatherDtoList) {
         report = new StringBuilder();
+        Date date = new Date(weatherDtoList.get(0).getDate());
+        for(WeatherResponseDto weatherDto:weatherDtoList) {
+            report.append(String.format("%n%s:%n%s %s, %s %s", toDateString(weatherDto.getDate(), "dd/MM HH:mm"),
+                    Emoji.THERMOMETER.getEmogi(), getTemparature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
+        }
         return report.toString();
+    }
+
+    private static String getMinMaxTemarature(List<WeatherResponseDto> weatherDtoList) {
+        double maxTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).max().getAsDouble();
+        double minTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).min().getAsDouble();
+        return String.format("%s .. %s", getTemparature(minTemp), getTemparature(maxTemp));
     }
 }

@@ -4,6 +4,7 @@ import com.ykotsiuba.soloveibot.entity.Emoji;
 import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherForecastResponse;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
+import com.ykotsiuba.soloveibot.util.StringUtils;
 
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class OpenWeatherResponseMapper {
         return WeatherResponseDto.builder()
                 .clouds(response.getClouds().getAll())
                 .pressure(convertPressure(response.getMain().getPressure()))
-                .date(toDateString(response.getDt()))
+                .date(response.getDt() * 1000)
                 .condition(response.getWeather().get(0).getDescription())
                 .humidity(response.getMain().getHumidity())
                 .icon(getWeatherEmoji(response.getWeather().get(0).getIcon()))
@@ -32,26 +33,31 @@ public class OpenWeatherResponseMapper {
     }
 
     public static List<WeatherResponseDto> toCollectionDto(OpenWeatherForecastResponse response) {
-        return response.getList().stream().map(OpenWeatherResponseMapper::toResponseDto).collect(Collectors.toList());
+        return response.getList().stream()
+                .map(OpenWeatherResponseMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
     
     private static Double convertPressure(Integer pressure) {
+        if(pressure == null) {
+            return null;
+        }
         return pressure * 100 / 133.32239023154;
     }
     
-    private static String toDateString(Long dt) {
-        Date date = new Date(dt * 1000);  
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");  
-        return dateFormat.format(date);
-    }
-    
     private static String toTimeString(Long dt) {
+        if(dt == null) {
+            return null;
+        }
         Date date = new Date(dt * 1000);  
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");  
         return dateFormat.format(date);
     }
     
     private static String getWeatherEmoji(String icon) {
+        if(StringUtils.isBlank(icon)) {
+            return null;
+        }
         if(icon.contains("01")) {
             return Emoji.CLEAR_SKY.getEmogi();
         }

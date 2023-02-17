@@ -12,7 +12,7 @@ public class WeatherResponseDto {
     private Integer clouds;
     private Integer humidity;
     private Double pressure;
-    private String date;
+    private Long date;
     private String sunrise;
     private String sunset;
     private String condition;

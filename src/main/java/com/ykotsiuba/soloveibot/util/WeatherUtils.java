@@ -5,11 +5,15 @@ import com.ykotsiuba.soloveibot.entity.dto.WeatherResponseDto;
 import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 
 import java.text.DateFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class WeatherUtils {
 
@@ -31,8 +35,8 @@ public class WeatherUtils {
         return report.toString();
     }
 
-    private static void getCityReport(Long date) {
-        report.append(String.format("Погода в місті %s на %s:%n", CITY, toDateString(date, "dd/MM/yyyy")));
+    private static void getCityReport(LocalDate date) {
+        report.append(String.format("Погода в місті %s на %s:%n", CITY, date.toString()));
     }
     
     private static String toDateString(Long dt, String format) {
@@ -74,16 +78,16 @@ public class WeatherUtils {
         report.append(String.format(Locale.ROOT,"Атмосферний тиск: %.2f мм.рт.ст.%n", pressure));
     }
 
-    private static void getSunReport(String sunrise, String sunset) {
+    private static void getSunReport(LocalTime sunrise, LocalTime sunset) {
         report.append(String.format("Схід сонця%s: %s%nЗахід сонця%s: %s", Emoji.SUNRISE.getEmogi(),
-                sunrise, Emoji.SUNSET.getEmogi(), sunset));
+                sunrise.toString(), Emoji.SUNSET.getEmogi(), sunset.toString()));
     }
     
     public static String prepare12HWeatherReport(List<WeatherResponseDto> weatherDtoList) {
         report = new StringBuilder();
         report.append(String.format("Прогноз погоди в місті %s на 12 годин:", CITY));
         for(WeatherResponseDto weatherDto:weatherDtoList) {
-            report.append(String.format("%n%s:%n%s %s, %s %s", toDateString(weatherDto.getDate(), "dd/MM HH:mm"),
+            report.append(String.format("%n%s:%n%s %s, %s %s", weatherDto.getDate().toString(),
                     Emoji.THERMOMETER.getEmogi(), getTemparature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
         }
         return report.toString();
@@ -91,9 +95,9 @@ public class WeatherUtils {
 
     public static String prepare5DWeatherReport(List<WeatherResponseDto> weatherDtoList) {
         report = new StringBuilder();
-        Date date = new Date(weatherDtoList.get(0).getDate());
+        Date date = new Date(weatherDtoList.get(0).getDate().getDayOfMonth());
         for(WeatherResponseDto weatherDto:weatherDtoList) {
-            report.append(String.format("%n%s:%n%s %s, %s %s", toDateString(weatherDto.getDate(), "dd/MM HH:mm"),
+            report.append(String.format("%n%s:%n%s %s, %s %s", weatherDto.getDate().toString(),
                     Emoji.THERMOMETER.getEmogi(), getTemparature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
         }
         return report.toString();
@@ -103,5 +107,11 @@ public class WeatherUtils {
         double maxTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).max().getAsDouble();
         double minTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).min().getAsDouble();
         return String.format("%s .. %s", getTemparature(minTemp), getTemparature(maxTemp));
+    }
+
+    public static List<WeatherResponseDto> filterByDayOfMonth(List<WeatherResponseDto> weatherDtoList, int dayOfMonth) {
+        return weatherDtoList.stream()
+                .filter(o -> o.getDate().getDayOfMonth() == dayOfMonth)
+                .collect(Collectors.toList());
     }
 }

@@ -8,9 +8,10 @@ import com.ykotsiuba.soloveibot.util.StringUtils;
 
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +22,12 @@ public class OpenWeatherResponseMapper {
         return WeatherResponseDto.builder()
                 .clouds(response.getClouds().getAll())
                 .pressure(convertPressure(response.getMain().getPressure()))
-                .date(response.getDt() * 1000)
+                .date(toLocalDate(response.getDt() * 1000))
                 .condition(response.getWeather().get(0).getDescription())
                 .humidity(response.getMain().getHumidity())
                 .icon(getWeatherEmoji(response.getWeather().get(0).getIcon()))
-                .sunrise(toTimeString(response.getSys().getSunrise()))
-                .sunset(toTimeString(response.getSys().getSunset()))
+                .sunrise(toLocalTime(response.getSys().getSunrise() * 1000))
+                .sunset(toLocalTime(response.getSys().getSunset() * 1000))
                 .temperature(response.getMain().getTemp())
                 .windSpeed(response.getWind().getSpeed())
                 .build();
@@ -45,13 +46,20 @@ public class OpenWeatherResponseMapper {
         return pressure * 100 / 133.32239023154;
     }
     
-    private static String toTimeString(Long dt) {
+    private static LocalTime toLocalTime(Long dt) {
         if(dt == null) {
             return null;
         }
-        Date date = new Date(dt * 1000);  
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");  
-        return dateFormat.format(date);
+        Instant instant = Instant.ofEpochSecond(dt);
+        return instant.atZone(ZoneId.systemDefault()).toLocalTime();
+    }
+
+    private static LocalDate toLocalDate(Long dt) {
+        if(dt == null) {
+            return null;
+        }
+        Instant instant = Instant.ofEpochSecond(dt);
+        return instant.atZone(ZoneId.systemDefault()).toLocalDate();
     }
     
     private static String getWeatherEmoji(String icon) {

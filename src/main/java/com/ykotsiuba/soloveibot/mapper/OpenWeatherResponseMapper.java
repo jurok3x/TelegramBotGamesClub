@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Component
 public class OpenWeatherResponseMapper {
     
+    private static final String TIME_ZONE = "Europe/Kiev";
+
     public static WeatherResponseDto toResponseDto(OpenWeatherResponse response) {
         return WeatherResponseDto.builder()
                 .clouds(response.getClouds().getAll())
@@ -50,7 +52,7 @@ public class OpenWeatherResponseMapper {
             return null;
         }
         Instant instant = Instant.ofEpochSecond(dt);
-        return instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        return instant.atZone(ZoneId.of(TIME_ZONE)).toLocalDateTime();
     }
     
     private static String getWeatherEmoji(String icon) {

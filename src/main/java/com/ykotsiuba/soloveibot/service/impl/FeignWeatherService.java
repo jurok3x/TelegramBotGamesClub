@@ -36,7 +36,7 @@ public class FeignWeatherService implements WeatherService {
 
     @Override
     public String get12HWeatherReport() {
-        WeatherParameters params = prepareParameters(4);
+        WeatherParameters params = prepareParameters(5);
         OpenWeatherForecastResponse forecastResponse = weatherClient.getForecast(params);
         List<WeatherResponseDto> weatherResponsesDto = OpenWeatherResponseMapper.toCollectionDto(forecastResponse);
         return WeatherUtils.prepare12HWeatherReport(weatherResponsesDto);

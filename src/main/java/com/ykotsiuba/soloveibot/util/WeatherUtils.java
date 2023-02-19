@@ -97,8 +97,9 @@ public class WeatherUtils {
         for(int i = firstDay; i <= firstDay + 5; i++) {
             List<WeatherResponseDto> dailyList = filterByDayOfMonth(weatherDtoList, i);
             String temparatureRange = getMinMaxTemarature(dailyList);
-            report.append(String.format("%n%s:%n%s %s", toDateString(dailyList.get(0).getDate(), DAY_MONTH_FORMAT),
-                    Emoji.THERMOMETER.getEmogi(), temparatureRange));
+            String dailyCondition = getEmojiList(dailyList);
+            report.append(String.format("%n%s:%n%s %s%n%s", toDateString(dailyList.get(0).getDate(), DAY_MONTH_FORMAT),
+                    Emoji.THERMOMETER.getEmogi(), temparatureRange, dailyCondition));
         }
         return report.toString();
     }
@@ -109,9 +110,16 @@ public class WeatherUtils {
         return String.format("%s .. %s", getTemparature(minTemp), getTemparature(maxTemp));
     }
 
-    public static List<WeatherResponseDto> filterByDayOfMonth(List<WeatherResponseDto> weatherDtoList, int dayOfMonth) {
+    private static List<WeatherResponseDto> filterByDayOfMonth(List<WeatherResponseDto> weatherDtoList, int dayOfMonth) {
         return weatherDtoList.stream()
                 .filter(o -> o.getDate().getDayOfMonth() == dayOfMonth)
                 .collect(Collectors.toList());
+    }
+    
+    private static String getEmojiList(List<WeatherResponseDto> weatherDtoList) {
+        return weatherDtoList.stream()
+                .map(o -> o.getIcon())
+                .distinct()
+                .collect(Collectors.joining(" "));
     }
 }

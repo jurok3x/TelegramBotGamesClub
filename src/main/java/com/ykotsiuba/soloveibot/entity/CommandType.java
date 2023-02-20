@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum CommandType {
     
-    CURRENT_WEATHER("weather", "Надсилає поточні погодні умови у місті Івано-Франківськ.", "CurrentWeatherForecast"),
+    CURRENT_WEATHER("weather", "Надсилає поточні погодні умови у місті Івано-Франківськ.", "CurrentWeather"),
     WEATHER_12H_FORECAST("weather_12h_forecast", "Надсилає прогноз погоди на найближчі 12 годин у місті Івано-Франківськ.", "Weather12HForecast"),
     WEATHER_5D_FORECAST("weather_5d_forecast", "Надсилає прогноз погоди на найближчі 5 днів у місті Івано-Франківськ.", "Weather5DForecast");
     

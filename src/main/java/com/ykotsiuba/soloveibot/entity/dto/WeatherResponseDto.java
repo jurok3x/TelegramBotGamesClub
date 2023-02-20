@@ -3,6 +3,8 @@ package com.ykotsiuba.soloveibot.entity.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 public class WeatherResponseDto {
@@ -12,9 +14,9 @@ public class WeatherResponseDto {
     private Integer clouds;
     private Integer humidity;
     private Double pressure;
-    private String date;
-    private String sunrise;
-    private String sunset;
+    private LocalDateTime date;
+    private LocalDateTime sunrise;
+    private LocalDateTime sunset;
     private String condition;
     private String icon;
 

@@ -19,11 +19,16 @@ public class CommandFactory {
     }
     
     private String extractCommand(CommandType type) {
-        String command = null;
-        if(type.getName().contains("weather")) {
-            command = "Weather";
+        if(type.getName().contains("12h")) {
+            return "Weather12HForecast";
         }
-        return command;
+        if(type.getName().contains("5d")) {
+            return "Weather5DForecast";
+        }
+        if(type.getName().contains("weather")) {
+            return "Weather";
+        }
+        return null;
     }
 
 }

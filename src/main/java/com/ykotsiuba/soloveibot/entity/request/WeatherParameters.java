@@ -9,7 +9,7 @@ public class WeatherParameters {
 
     private String q;
     private String units;
-    private String language;
+    private String lang;
     private String appid;
     private Integer cnt;
 }

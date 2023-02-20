@@ -12,9 +12,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-@Component("WeatherCommandHandler")
+@Component("Weather5DForecastCommandHandler")
 @AllArgsConstructor
-public class WeatherCommandHandler implements CommandHandler {
+public class Weather5DForecastHandler implements CommandHandler {
     
     private SoloveiTelegramBot bot;
     private FeignWeatherService weatherService;
@@ -23,11 +23,11 @@ public class WeatherCommandHandler implements CommandHandler {
     public void handleCommand(Message message, String text) {
         SendMessage messageRequest = SendMessage.builder()
                 .chatId(message.getChatId())
-                .text(weatherService.getCurrentWeatherReport())
+                .text(weatherService.get5DWeatherReport())
                 .build();
         sendMessage(messageRequest);
     }
-
+    
     private void sendMessage(SendMessage messageRequest) {
         try {
             bot.execute(messageRequest);
@@ -38,7 +38,7 @@ public class WeatherCommandHandler implements CommandHandler {
 
     @Override
     public CommandType getCommand() {
-        return CommandType.CURRENT_WEATHER;
+        return CommandType.WEATHER_5D_FORECAST;
     }
 
 }

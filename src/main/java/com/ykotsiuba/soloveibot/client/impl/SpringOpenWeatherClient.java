@@ -33,39 +33,53 @@ public class SpringOpenWeatherClient implements OpenWeatherClient {
 
     @Override
     public OpenWeatherResponse getCurrentWeather() {
-        ResponseEntity<OpenWeatherResponse> response = restTemplate.getForEntity(prepareUri(ForecastType.WEATHER.name().toLowerCase()),
+        ResponseEntity<OpenWeatherResponse> response = restTemplate.getForEntity(prepareUri(),
                 OpenWeatherResponse.class);
         return response.getBody();
     }
 
     @Override
-    public OpenWeatherForecastResponse getWeatherForecast() {
-        ResponseEntity<OpenWeatherForecastResponse> response = restTemplate.getForEntity(prepareUri(ForecastType.FORECAST.name().toLowerCase()),
+    public OpenWeatherForecastResponse getWeatherForecast(Integer count) {
+        ResponseEntity<OpenWeatherForecastResponse> response = restTemplate.getForEntity(prepareUri(count),
                 OpenWeatherForecastResponse.class);
         return response.getBody();
     }
 
-    private URI prepareUri(String type) {
+    private URI prepareUri() {
         URI uri = null;
         try {
             URIBuilder builder = new URIBuilder();
             builder.setScheme("https");
             builder.setHost("api.openweathermap.org");
-            builder.setPathSegments("data", "2.5", type);
+            builder.setPathSegments("data", "2.5", "weather");
             builder.addParameter("q", city);
             builder.addParameter("lang", language);
             builder.addParameter("units", units);
-            builder.addParameter("APPID", weatherToken);
-            builder.addParameter("cnt", "3"); //TODO: fix this
+            builder.addParameter("appid", weatherToken);
             uri = builder.build();
         } catch (URISyntaxException e) {
             System.out.println(String.format("Error building URI. Reason: %s", e.getMessage()));
         }
         return uri;
     }
-    
-    private enum ForecastType {
-        WEATHER, FORECAST
+
+    private URI prepareUri(Integer count) {
+        URI uri = null;
+        try {
+            URIBuilder builder = new URIBuilder();
+            builder.setScheme("https");
+            builder.setHost("api.openweathermap.org");
+            builder.setPathSegments("data", "2.5", "forecast");
+            builder.addParameter("q", city);
+            builder.addParameter("lang", language);
+            builder.addParameter("units", units);
+            builder.addParameter("appid", weatherToken);
+            builder.addParameter("cnt", count.toString());
+            uri = builder.build();
+        } catch (URISyntaxException e) {
+            System.out.println(String.format("Error building URI. Reason: %s", e.getMessage()));
+        }
+        return uri;
     }
 
 }

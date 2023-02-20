@@ -6,6 +6,6 @@ import com.ykotsiuba.soloveibot.entity.weather.OpenWeatherResponse;
 public interface OpenWeatherClient {
     
     OpenWeatherResponse getCurrentWeather();
-    OpenWeatherForecastResponse getWeatherForecast();
+    OpenWeatherForecastResponse getWeatherForecast(Integer count);
 
 }

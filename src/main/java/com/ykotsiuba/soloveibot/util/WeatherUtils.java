@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class WeatherUtils {
@@ -17,97 +18,89 @@ public class WeatherUtils {
     private static final int DEGREE_SIGN = 0x00B0;
     private static final String CITY = "Івано-Франківськ";
     private static final Locale LOCAL = new Locale("uk");
+    private static final String CITY_REPORT = "Погода в місті %s на %s:%n";
+    private static final String TEMPERATURE_REPORT = "Температура повітря%s : %s%n";
+    private static final String CONDITION_REPORT = "Погодні умови: %s%s%n";
+    private static final String HUMIDITY_REPORT = "Відносна вологість%s : %d%%%n";
+    private static final String CLOUDS_REPORT = "Хмарність %s: %d%%%n";
+    private static final String WIND_REPORT = "Швидкість вітру %s: %.2f м/с%n";
+    private static final String PRESSURE_REPORT = "Атмосферний тиск: %.2f мм.рт.ст.%n";
+    private static final String SUN_REPORT = "Схід сонця%s: %s%nЗахід сонця%s: %s";
+    private static final String TWELVE_HOURS_REPORT = "Прогноз погоди в місті %s на 12 годин:";
+    private static final String THREE_HOURS_REPORT = "%n%s:%n%s %s, %s %s";
+    private static final String FIVE_DAY_REPORT = "Прогноз погоди в місті %s на 5 днів:";
+    private static final String ONE_DAY_REPORT = "%n%s:%n%s %s%n%s";
 
     private static StringBuilder report;
 
-    public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) {
+    public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) throws IllegalArgumentException{
         report = new StringBuilder();
-        getCityReport(weatherDto.getDate());
-        getTemparatureReport(weatherDto.getTemperature());
-        getWeatherConditionReport(weatherDto.getCondition(), weatherDto.getIcon());
-        getHumidityReport(weatherDto.getHumidity());
-        getCloudsReport(weatherDto.getClouds());
-        getWindReport(weatherDto.getWindSpeed());
-        getPressureReport(weatherDto.getPressure());
-        getSunReport(weatherDto.getSunrise(), weatherDto.getSunset());
+        appendReport(CITY_REPORT, CITY, toDateString(weatherDto.getDate(), DAY_MONTH_FORMAT));
+        appendReport(TEMPERATURE_REPORT, Emoji.THERMOMETER.getEmogi(),
+                formatTemperature(weatherDto.getTemperature()));
+        appendReport(CONDITION_REPORT, weatherDto.getCondition(), weatherDto.getIcon());
+        appendReport(HUMIDITY_REPORT, Emoji.HUMIDITY.getEmogi(),
+                weatherDto.getHumidity());
+        appendReport(CLOUDS_REPORT, Emoji.BROKEN_CLOUDS.getEmogi(),
+                weatherDto.getClouds());
+        appendReport(WIND_REPORT, Emoji.WIND.getEmogi(),
+                weatherDto.getWindSpeed());
+        appendReport(PRESSURE_REPORT, weatherDto.getPressure());
+        appendReport(SUN_REPORT, Emoji.SUNRISE.getEmogi(),
+                toDateString(weatherDto.getSunrise(), HOUR_FORMAT), Emoji.SUNSET.getEmogi(), toDateString(weatherDto.getSunset(), HOUR_FORMAT));
         return report.toString();
     }
 
-    private static void getCityReport(LocalDateTime date) {
-        report.append(String.format("Погода в місті %s на %s:%n", CITY, toDateString(date, DAY_MONTH_FORMAT)));
+    private static void appendReport(String format, Object... components) {
+        if (components == null || StringUtils.isBlank(format)) {
+            throw new IllegalArgumentException("Components array cannot be null");
+        }
+        for (Object component : components) {
+            if (component == null) {
+                throw new IllegalArgumentException("Component cannot be null");
+            }
+            if (StringUtils.isBlank(component.toString())) {
+                throw new IllegalArgumentException("Component cannot be empty");
+            }
+        }
+        report.append(String.format(Locale.ROOT, format, components));
     }
     
     private static String toDateString(LocalDateTime date, String format) {
+        if(date == null || StringUtils.isBlank(format)){
+            return "";
+        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format, LOCAL);
         return date.format(formatter);
     }
     
-    private static void getTemparatureReport(Double temperature) {
-        report.append(String.format("Температура повітря%s : %s%n", Emoji.THERMOMETER.getEmogi(),
-                getTemparature(temperature)));
-    }
-    
-    private static String getTemparature(Double temperature) {
+    private static String formatTemperature(Double temperature) {
         return String.format(Locale.ROOT, "%s%.2f %sc", (temperature > 0) ? "+" : "",
                 temperature, String.valueOf(Character.toChars(DEGREE_SIGN)));
     }
-
-    private static void getWeatherConditionReport(String condition, String icon) {
-        report.append(String.format("Погодні умови: %s%s%n", condition, icon));
-    }
-
-    private static void getHumidityReport(Integer humidity) {
-        report.append(String.format("Відносна вологість%s : %d%%%n", Emoji.HUMIDITY.getEmogi(),
-                humidity));
-    }
-
-    private static void getCloudsReport(Integer clouds) {
-        report.append(String.format("Хмарність %s: %d%%%n", Emoji.BROKEN_CLOUDS.getEmogi(),
-                clouds));
-    }
-
-    private static void getWindReport(Double windSpeed) {
-        report.append(String.format(Locale.ROOT,"Швидкість вітру %s: %.2f м/с%n", Emoji.WIND.getEmogi(),
-                windSpeed));
-    }
-
-    private static void getPressureReport(Double pressure) {
-        report.append(String.format(Locale.ROOT,"Атмосферний тиск: %.2f мм.рт.ст.%n", pressure));
-    }
-
-    private static void getSunReport(LocalDateTime sunrise, LocalDateTime sunset) {
-        report.append(String.format("Схід сонця%s: %s%nЗахід сонця%s: %s", Emoji.SUNRISE.getEmogi(),
-                toDateString(sunrise, HOUR_FORMAT), Emoji.SUNSET.getEmogi(), toDateString(sunset, HOUR_FORMAT)));
-    }
     
-    public static String prepare12HWeatherReport(List<WeatherResponseDto> weatherDtoList) {
+    public static String prepare12HWeatherReport(List<WeatherResponseDto> weatherDtoList) throws IllegalArgumentException{
         report = new StringBuilder();
-        report.append(String.format("Прогноз погоди в місті %s на 12 годин:", CITY));
+        appendReport(TWELVE_HOURS_REPORT, CITY);
         for(WeatherResponseDto weatherDto:weatherDtoList) {
-            report.append(String.format("%n%s:%n%s %s, %s %s", toDateString(weatherDto.getDate(), DAY_TIME_FORMAT),
-                    Emoji.THERMOMETER.getEmogi(), getTemparature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
+            appendReport(THREE_HOURS_REPORT, toDateString(weatherDto.getDate(), DAY_TIME_FORMAT),
+                    Emoji.THERMOMETER.getEmogi(), formatTemperature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon());
         }
         return report.toString();
     }
 
-    public static String prepare5DWeatherReport(List<WeatherResponseDto> weatherDtoList) {
+    public static String prepare5DWeatherReport(List<WeatherResponseDto> weatherDtoList) throws IllegalArgumentException{
         report = new StringBuilder();
-        report.append(String.format("Прогноз погоди в місті %s на 5 днів:", CITY));
+        appendReport(FIVE_DAY_REPORT, CITY);
         int firstDay = weatherDtoList.get(0).getDate().getDayOfMonth();
         for(int i = firstDay; i <= firstDay + 5; i++) {
             List<WeatherResponseDto> dailyList = filterByDayOfMonth(weatherDtoList, i);
-            String temparatureRange = getMinMaxTemarature(dailyList);
+            String temperatureRange = getMinMaxTemperature(dailyList);
             String dailyCondition = getEmojiList(dailyList);
-            report.append(String.format("%n%s:%n%s %s%n%s", toDateString(dailyList.get(0).getDate(), DAY_MONTH_FORMAT),
-                    Emoji.THERMOMETER.getEmogi(), temparatureRange, dailyCondition));
+            appendReport(ONE_DAY_REPORT, toDateString(dailyList.get(0).getDate(), DAY_MONTH_FORMAT),
+                    Emoji.THERMOMETER.getEmogi(), temperatureRange, dailyCondition);
         }
         return report.toString();
-    }
-
-    private static String getMinMaxTemarature(List<WeatherResponseDto> weatherDtoList) {
-        double maxTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).max().getAsDouble();
-        double minTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).min().getAsDouble();
-        return String.format("%s .. %s", getTemparature(minTemp), getTemparature(maxTemp));
     }
 
     private static List<WeatherResponseDto> filterByDayOfMonth(List<WeatherResponseDto> weatherDtoList, int dayOfMonth) {
@@ -115,10 +108,20 @@ public class WeatherUtils {
                 .filter(o -> o.getDate().getDayOfMonth() == dayOfMonth)
                 .collect(Collectors.toList());
     }
+
+    private static String getMinMaxTemperature(List<WeatherResponseDto> weatherDtoList) {
+        OptionalDouble maxTemp = weatherDtoList.stream().mapToDouble(WeatherResponseDto::getTemperature).max();
+        OptionalDouble  minTemp = weatherDtoList.stream().mapToDouble(WeatherResponseDto::getTemperature).min();
+        if(maxTemp.isEmpty()){
+            return "";
+        }
+        return String.format("%s .. %s", formatTemperature(minTemp.getAsDouble()), formatTemperature(maxTemp.getAsDouble()));
+    }
+
     
     private static String getEmojiList(List<WeatherResponseDto> weatherDtoList) {
         return weatherDtoList.stream()
-                .map(o -> o.getIcon())
+                .map(WeatherResponseDto::getIcon)
                 .distinct()
                 .collect(Collectors.joining(" "));
     }

@@ -15,20 +15,7 @@ public class CommandFactory {
     private BeanFactory beanFactory;
     
     public CommandHandler getCommandHandler(CommandType type) {
-        return beanFactory.getBean(extractCommand(type) + HANDLER_NAME_SUFFIX, CommandHandler.class);
-    }
-    
-    private String extractCommand(CommandType type) {
-        if(type.getName().contains("12h")) {
-            return "Weather12HForecast";
-        }
-        if(type.getName().contains("5d")) {
-            return "Weather5DForecast";
-        }
-        if(type.getName().contains("weather")) {
-            return "Weather";
-        }
-        return null;
+        return beanFactory.getBean(type.getHandler() + HANDLER_NAME_SUFFIX, CommandHandler.class);
     }
 
 }

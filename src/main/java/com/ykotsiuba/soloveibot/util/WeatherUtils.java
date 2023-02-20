@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 public class WeatherUtils {
@@ -23,7 +24,7 @@ public class WeatherUtils {
     public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) {
         report = new StringBuilder();
         getCityReport(weatherDto.getDate());
-        getTemparatureReport(weatherDto.getTemperature());
+        getTemperatureReport(weatherDto.getTemperature());
         getWeatherConditionReport(weatherDto.getCondition(), weatherDto.getIcon());
         getHumidityReport(weatherDto.getHumidity());
         getCloudsReport(weatherDto.getClouds());
@@ -42,12 +43,12 @@ public class WeatherUtils {
         return date.format(formatter);
     }
     
-    private static void getTemparatureReport(Double temperature) {
+    private static void getTemperatureReport(Double temperature) {
         report.append(String.format("Температура повітря%s : %s%n", Emoji.THERMOMETER.getEmogi(),
-                getTemparature(temperature)));
+                formatTemperature(temperature)));
     }
     
-    private static String getTemparature(Double temperature) {
+    private static String formatTemperature(Double temperature) {
         return String.format(Locale.ROOT, "%s%.2f %sc", (temperature > 0) ? "+" : "",
                 temperature, String.valueOf(Character.toChars(DEGREE_SIGN)));
     }
@@ -85,7 +86,7 @@ public class WeatherUtils {
         report.append(String.format("Прогноз погоди в місті %s на 12 годин:", CITY));
         for(WeatherResponseDto weatherDto:weatherDtoList) {
             report.append(String.format("%n%s:%n%s %s, %s %s", toDateString(weatherDto.getDate(), DAY_TIME_FORMAT),
-                    Emoji.THERMOMETER.getEmogi(), getTemparature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
+                    Emoji.THERMOMETER.getEmogi(), formatTemperature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon()));
         }
         return report.toString();
     }
@@ -96,18 +97,21 @@ public class WeatherUtils {
         int firstDay = weatherDtoList.get(0).getDate().getDayOfMonth();
         for(int i = firstDay; i <= firstDay + 5; i++) {
             List<WeatherResponseDto> dailyList = filterByDayOfMonth(weatherDtoList, i);
-            String temparatureRange = getMinMaxTemarature(dailyList);
+            String temperatureRange = getMinMaxTemperature(dailyList);
             String dailyCondition = getEmojiList(dailyList);
             report.append(String.format("%n%s:%n%s %s%n%s", toDateString(dailyList.get(0).getDate(), DAY_MONTH_FORMAT),
-                    Emoji.THERMOMETER.getEmogi(), temparatureRange, dailyCondition));
+                    Emoji.THERMOMETER.getEmogi(), temperatureRange, dailyCondition));
         }
         return report.toString();
     }
 
-    private static String getMinMaxTemarature(List<WeatherResponseDto> weatherDtoList) {
-        double maxTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).max().getAsDouble();
-        double minTemp = weatherDtoList.stream().mapToDouble(response -> response.getTemperature()).min().getAsDouble();
-        return String.format("%s .. %s", getTemparature(minTemp), getTemparature(maxTemp));
+    private static String getMinMaxTemperature(List<WeatherResponseDto> weatherDtoList) {
+        OptionalDouble maxTemp = weatherDtoList.stream().mapToDouble(WeatherResponseDto::getTemperature).max();
+        OptionalDouble  minTemp = weatherDtoList.stream().mapToDouble(WeatherResponseDto::getTemperature).min();
+        if(maxTemp.isEmpty()){
+            return "";
+        }
+        return String.format("%s .. %s", formatTemperature(minTemp.getAsDouble()), formatTemperature(maxTemp.getAsDouble()));
     }
 
     private static List<WeatherResponseDto> filterByDayOfMonth(List<WeatherResponseDto> weatherDtoList, int dayOfMonth) {
@@ -118,7 +122,7 @@ public class WeatherUtils {
     
     private static String getEmojiList(List<WeatherResponseDto> weatherDtoList) {
         return weatherDtoList.stream()
-                .map(o -> o.getIcon())
+                .map(WeatherResponseDto::getIcon)
                 .distinct()
                 .collect(Collectors.joining(" "));
     }

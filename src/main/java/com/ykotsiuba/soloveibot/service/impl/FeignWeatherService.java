@@ -12,6 +12,7 @@ import com.ykotsiuba.soloveibot.service.WeatherService;
 import com.ykotsiuba.soloveibot.util.WeatherUtils;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class FeignWeatherService implements WeatherService {
 
     @Value("${weather.city}")
@@ -29,25 +31,52 @@ public class FeignWeatherService implements WeatherService {
 
     @Override
     public String getCurrentWeatherReport() {
-        OpenWeatherResponse weatherResponse = weatherClient.getWeather(prepareParameters());
+        OpenWeatherResponse weatherResponse = weatherClient.getCurrentWeather(prepareParameters());
         WeatherResponseDto  weatherResponseDto = OpenWeatherResponseMapper.toResponseDto(weatherResponse);
-        return WeatherUtils.prepareCurrentWeatherReport(weatherResponseDto);
+        return extractCurrentWeatherReport(weatherResponseDto);
+    }
+
+    private String extractCurrentWeatherReport(WeatherResponseDto  weatherResponseDto){
+        try{
+            return WeatherUtils.prepareCurrentWeatherReport(weatherResponseDto);
+        } catch(IllegalArgumentException ex){
+            log.error("Error parsing current weather response");
+            return "Помилка отримання прогнозу погоди";
+        }
     }
 
     @Override
     public String get12HWeatherReport() {
         WeatherParameters params = prepareParameters(5);
-        OpenWeatherForecastResponse forecastResponse = weatherClient.getForecast(params);
+        OpenWeatherForecastResponse forecastResponse = weatherClient.getWeatherForecast(params);
         List<WeatherResponseDto> weatherResponsesDto = OpenWeatherResponseMapper.toCollectionDto(forecastResponse);
-        return WeatherUtils.prepare12HWeatherReport(weatherResponsesDto);
+        return extract12HWeatherReport(weatherResponsesDto);
+    }
+
+    private String extract12HWeatherReport(List<WeatherResponseDto> weatherResponsesDto){
+        try{
+            return WeatherUtils.prepare12HWeatherReport(weatherResponsesDto);
+        } catch(IllegalArgumentException ex){
+            log.error("Error parsing weather 112 hours response");
+            return "Помилка отримання прогнозу погоди";
+        }
     }
 
     @Override
     public String get5DWeatherReport() {
         WeatherParameters params = prepareParameters(40);
-        OpenWeatherForecastResponse forecastResponse = weatherClient.getForecast(params);
+        OpenWeatherForecastResponse forecastResponse = weatherClient.getWeatherForecast(params);
         List<WeatherResponseDto> weatherResponsesDto = OpenWeatherResponseMapper.toCollectionDto(forecastResponse);
-        return WeatherUtils.prepare5DWeatherReport(weatherResponsesDto);
+        return extract5DWeatherReport(weatherResponsesDto);
+    }
+
+    private String extract5DWeatherReport(List<WeatherResponseDto> weatherResponsesDto){
+        try{
+            return WeatherUtils.prepare5DWeatherReport(weatherResponsesDto);
+        } catch(IllegalArgumentException ex){
+            log.error("Error parsing weather 5 days response");
+            return "Помилка отримання прогнозу погоди";
+        }
     }
 
     private WeatherParameters prepareParameters() {

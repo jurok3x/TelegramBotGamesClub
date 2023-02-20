@@ -33,7 +33,7 @@ public class WeatherUtils {
 
     private static StringBuilder report;
 
-    public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) {
+    public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) throws IllegalArgumentException{
         report = new StringBuilder();
         appendReport(CITY_REPORT, CITY, toDateString(weatherDto.getDate(), DAY_MONTH_FORMAT));
         appendReport(TEMPERATURE_REPORT, Emoji.THERMOMETER.getEmogi(),
@@ -79,17 +79,17 @@ public class WeatherUtils {
                 temperature, String.valueOf(Character.toChars(DEGREE_SIGN)));
     }
     
-    public static String prepare12HWeatherReport(List<WeatherResponseDto> weatherDtoList) {
+    public static String prepare12HWeatherReport(List<WeatherResponseDto> weatherDtoList) throws IllegalArgumentException{
         report = new StringBuilder();
         appendReport(TWELVE_HOURS_REPORT, CITY);
         for(WeatherResponseDto weatherDto:weatherDtoList) {
             appendReport(THREE_HOURS_REPORT, toDateString(weatherDto.getDate(), DAY_TIME_FORMAT),
-                    Emoji.THERMOMETER.getEmogi(), formatTemperature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon();
+                    Emoji.THERMOMETER.getEmogi(), formatTemperature(weatherDto.getTemperature()), weatherDto.getCondition(), weatherDto.getIcon());
         }
         return report.toString();
     }
 
-    public static String prepare5DWeatherReport(List<WeatherResponseDto> weatherDtoList) {
+    public static String prepare5DWeatherReport(List<WeatherResponseDto> weatherDtoList) throws IllegalArgumentException{
         report = new StringBuilder();
         appendReport(FIVE_DAY_REPORT, CITY);
         int firstDay = weatherDtoList.get(0).getDate().getDayOfMonth();
@@ -99,7 +99,6 @@ public class WeatherUtils {
             String dailyCondition = getEmojiList(dailyList);
             appendReport(ONE_DAY_REPORT, toDateString(dailyList.get(0).getDate(), DAY_MONTH_FORMAT),
                     Emoji.THERMOMETER.getEmogi(), temperatureRange, dailyCondition);
-            report.append(String.format());
         }
         return report.toString();
     }

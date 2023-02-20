@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public interface FeignOpenWeatherClient {
 
         @GetMapping("/data/2.5/weather")
-        OpenWeatherResponse getWeather(@SpringQueryMap WeatherParameters params);
+        OpenWeatherResponse getCurrentWeather(@SpringQueryMap WeatherParameters params);
 
         @GetMapping("/data/2.5/forecast")
-        OpenWeatherForecastResponse getForecast(@SpringQueryMap WeatherParameters params);
+        OpenWeatherForecastResponse getWeatherForecast(@SpringQueryMap WeatherParameters params);
 
 }

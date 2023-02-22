@@ -33,7 +33,7 @@ public class WeatherUtils {
 
     private static StringBuilder report;
 
-    public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) throws IllegalArgumentException{
+    public static String prepareCurrentWeatherReport(WeatherResponseDto weatherDto) {
         report = new StringBuilder();
         appendReport(CITY_REPORT, CITY, toDateString(weatherDto.getDate(), DAY_MONTH_FORMAT));
         appendReport(TEMPERATURE_REPORT, Emoji.THERMOMETER.getEmogi(),
@@ -57,10 +57,10 @@ public class WeatherUtils {
         }
         for (Object component : components) {
             if (component == null) {
-                throw new IllegalArgumentException("Component cannot be null");
+                return;
             }
             if (StringUtils.isBlank(component.toString())) {
-                throw new IllegalArgumentException("Component cannot be empty");
+                return;
             }
         }
         report.append(String.format(Locale.ROOT, format, components));

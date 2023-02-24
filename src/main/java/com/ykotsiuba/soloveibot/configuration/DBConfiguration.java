@@ -1,8 +1,9 @@
 package com.ykotsiuba.soloveibot.configuration;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
@@ -11,10 +12,10 @@ public class DBConfiguration {
 
     @Bean
     public DataSource getDataSoure() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("");
-        dataSource.setUsername("jurok3x");
+        dataSource.setJdbcUrl("");
+        dataSource.setUsername("");
         dataSource.setPassword("");
         return dataSource;
     }

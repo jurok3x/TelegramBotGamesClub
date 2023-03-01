@@ -14,6 +14,7 @@ public interface TelegramMessageDao {
     List<TelegramMessage> getAllMessages();
     List<TelegramMessage> getMessagesByChatId(Long chatId);
     TelegramMessage save(TelegramMessage message);
+    TelegramMessage updateText(TelegramMessage message);
     void delete(Integer id);
 
 }

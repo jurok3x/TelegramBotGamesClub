@@ -13,7 +13,7 @@ public class TelegramMessageExtractor implements RowMapper<TelegramMessage> {
     public TelegramMessage mapRow(ResultSet rs, int rowNum) throws SQLException {
         return TelegramMessage.builder()
                 .id(rs.getInt("id"))
-                .user(rs.getString("user"))
+                .user(rs.getString("username"))
                 .text(rs.getString("text"))
                 .chatId(rs.getLong("chat_id"))
                 .date(rs.getDate("date"))

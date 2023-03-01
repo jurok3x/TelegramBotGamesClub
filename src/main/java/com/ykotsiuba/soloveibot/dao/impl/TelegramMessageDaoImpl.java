@@ -39,6 +39,8 @@ public class TelegramMessageDaoImpl implements TelegramMessageDao {
     private String deleteById;
     @Value("${save}")
     private String save;
+    @Value("${update.text}")
+    private String updateText;
 
     @Override
     public Optional<TelegramMessage> getMessageById(Integer id) {
@@ -87,6 +89,15 @@ public class TelegramMessageDaoImpl implements TelegramMessageDao {
 
         message.setId(id);
 
+        return message;
+    }
+
+    @Override
+    public TelegramMessage updateText(TelegramMessage message) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("id", message.getId())
+                .addValue("text", message.getText());
+        template.update(updateText, params);
         return message;
     }
 

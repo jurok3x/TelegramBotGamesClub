@@ -17,7 +17,7 @@ public class TelegramMessageService implements MessageService {
     private SoloveiTelegramBot bot;
 
     @Override
-    public void sendMessage(String message) {
+    public void sendToTelegramChat(String message) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setText(String.format("Повідомлення від Романа: '%s'", message));
         sendMessage.setChatId(CHAT_ID);

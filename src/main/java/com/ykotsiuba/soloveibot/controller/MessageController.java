@@ -13,7 +13,7 @@ public class MessageController {
 
     @PostMapping("/send")
     public String sendMessage(@RequestBody String message) {
-        messageService.sendMessage(message);
+        messageService.sendToTelegramChat(message);
         return message;
     }
 }

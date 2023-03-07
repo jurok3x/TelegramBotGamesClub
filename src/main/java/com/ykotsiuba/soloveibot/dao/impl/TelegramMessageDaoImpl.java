@@ -76,18 +76,13 @@ public class TelegramMessageDaoImpl implements TelegramMessageDao {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        params.addValue("user", message.getUser())
+        params.addValue("id", message.getId())
+                .addValue("user", message.getUser())
                 .addValue("text", message.getText())
                 .addValue("date", message.getDate())
                 .addValue("chat_id", message.getChatId());
 
-        template.update(save, params, keyHolder, new String[] { "id" });
-        Integer id = 0;
-        if(keyHolder.getKey() != null) {
-            id = keyHolder.getKey().intValue();
-        }
-
-        message.setId(id);
+        template.update(save, params);
 
         return message;
     }

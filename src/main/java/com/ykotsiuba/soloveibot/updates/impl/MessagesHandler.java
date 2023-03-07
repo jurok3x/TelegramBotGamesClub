@@ -1,5 +1,7 @@
 package com.ykotsiuba.soloveibot.updates.impl;
 
+import com.ykotsiuba.soloveibot.entity.TelegramMessage;
+import com.ykotsiuba.soloveibot.service.impl.TelegramMessageService;
 import com.ykotsiuba.soloveibot.updates.UpdateHandlerStage;
 import com.ykotsiuba.soloveibot.updates.UpdatesHandler;
 
@@ -12,11 +14,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @AllArgsConstructor
 public class MessagesHandler implements UpdatesHandler {
 
+    private TelegramMessageService messageService;
+
     @Override
     public boolean handleUpdate(Update update) {
         if(!validateMessage(update)) {
             return false;
         }
+        messageService.save(update.getMessage());
         return true;
     }
     

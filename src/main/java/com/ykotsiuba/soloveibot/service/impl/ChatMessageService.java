@@ -18,11 +18,10 @@ import java.util.Date;
 
 @Service
 @AllArgsConstructor
-public class TelegramMessageService implements MessageService {
+public class ChatMessageService implements MessageService {
 
     public static final String CHAT_ID = "-1001669277319";
     private SoloveiTelegramBot bot;
-    private TelegramMessageDao messageDao;
 
     @Override// todo: fix
     public void sendToTelegramChat(String message) {
@@ -38,18 +37,6 @@ public class TelegramMessageService implements MessageService {
         } catch (TelegramApiException e) {
             System.out.println(String.format("Error sending message. Reason: %s", e.getMessage()));
         }
-    }
-
-    @Override
-    public TelegramMessageDto save(Message message) {
-        TelegramMessage tm = TelegramMessage.builder()
-                .id(message.getMessageId())
-                .text(message.getText())
-                .user(message.getFrom().getUserName())
-                .date(new Date(message.getDate()))
-                .chatId(message.getChatId())
-                .build();
-        return TelegramMessageMapper.toMessageDto(messageDao.save(tm));
     }
 
 }

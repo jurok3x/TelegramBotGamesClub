@@ -1,7 +1,6 @@
 package com.ykotsiuba.soloveibot.updates.impl;
 
-import com.ykotsiuba.soloveibot.entity.TelegramMessage;
-import com.ykotsiuba.soloveibot.service.impl.TelegramMessageService;
+import com.ykotsiuba.soloveibot.service.TelegramMessageService;
 import com.ykotsiuba.soloveibot.updates.UpdateHandlerStage;
 import com.ykotsiuba.soloveibot.updates.UpdatesHandler;
 
